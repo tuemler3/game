@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Einfaches Browser-Spiel</title>
+    <style>
+        /* CSS für das Spielfeld und die Spielerfigur */
+        #spielfeld {
+            width: 500px;
+            height: 500px;
+            border: 1px solid #000;
+            position: relative;
+            background-color: #f0f0f0;
+        }
+
+        .figur, .punkt {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+
+        .figur {
+            background-color: red;
+        }
+
+        .punkt {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Einfaches Browser-Spiel</h1>
+    <div id="spielfeld">
+        <div class="figur" id="spieler" style="left: 0; top: 0;"></div>
+        <div class="punkt" id="punkt" style="left: 100px; top: 100px;"></div>
+    </div>
+    <script src="spiel.js"></script>
+</body>
+</html>
