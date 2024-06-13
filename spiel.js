@@ -1,75 +1,74 @@
-// spiel.js
+// raketenspiel.js
 
-// Wähle das Spielfeld und die Spielfiguren aus
+// Wähle das Spielfeld und die Rakete aus
 const spielfeld = document.getElementById('spielfeld');
-const spieler = document.getElementById('spieler');
-const punkt = document.getElementById('punkt');
+const rakete = document.getElementById('rakete');
 
-// Initiale Position des Spielers
-let spielerPosition = {
-    left: 0,
-    top: 0
+// Initiale Position und Winkel der Rakete
+let raketePosition = {
+    x: spielfeld.offsetWidth / 2,
+    y: spielfeld.offsetHeight / 2,
+    winkel: 0
 };
 
-// Geschwindigkeit des Spielers
-const schrittGroesse = 20;
+// Geschwindigkeit und Beschleunigung der Rakete
+let geschwindigkeit = {
+    x: 0,
+    y: 0
+};
+const schub = 0.1;
+const gravitation = 0.05;
 
-// Funktion zum Bewegen des Spielers
-function bewegeSpieler(e) {
-    switch(e.key) {
-        case 'ArrowUp':
-            if (spielerPosition.top > 0) {
-                spielerPosition.top -= schrittGroesse;
-            }
-            break;
-        case 'ArrowDown':
-            if (spielerPosition.top < spielfeld.offsetHeight - spieler.offsetHeight) {
-                spielerPosition.top += schrittGroesse;
-            }
-            break;
-        case 'ArrowLeft':
-            if (spielerPosition.left > 0) {
-                spielerPosition.left -= schrittGroesse;
-            }
-            break;
-        case 'ArrowRight':
-            if (spielerPosition.left < spielfeld.offsetWidth - spieler.offsetWidth) {
-                spielerPosition.left += schrittGroesse;
-            }
-            break;
+// Funktion zum Drehen der Rakete
+function dreheRakete(richtung) {
+    if (richtung === 'links') {
+        raketePosition.winkel -= 5;
+    } else if (richtung === 'rechts') {
+        raketePosition.winkel += 5;
     }
-    spieler.style.top = spielerPosition.top + 'px';
-    spieler.style.left = spielerPosition.left + 'px';
-    ueberpruefeKollision();
+    rakete.style.transform = `translate(-50%, -50%) rotate(${raketePosition.winkel}deg)`;
 }
 
-// Funktion zur Überprüfung der Kollision
-function ueberpruefeKollision() {
-    const spielerRect = spieler.getBoundingClientRect();
-    const punktRect = punkt.getBoundingClientRect();
-
-    if (spielerRect.left < punktRect.right &&
-        spielerRect.right > punktRect.left &&
-        spielerRect.top < punktRect.bottom &&
-        spielerRect.bottom > punktRect.top) {
-        alert('Punkt gesammelt!');
-        // Neuen Punkt an zufälliger Position platzieren
-        platzierenPunkt();
-    }
+// Funktion zum Schub der Rakete
+function gibSchub() {
+    geschwindigkeit.x += schub * Math.sin(raketePosition.winkel * Math.PI / 180);
+    geschwindigkeit.y -= schub * Math.cos(raketePosition.winkel * Math.PI / 180);
 }
 
-// Funktion zum Platzieren des Punkts an einer zufälligen Position
-function platzierenPunkt() {
-    const maxLeft = spielfeld.offsetWidth - punkt.offsetWidth;
-    const maxTop = spielfeld.offsetHeight - punkt.offsetHeight;
-    const randomLeft = Math.floor(Math.random() * maxLeft);
-    const randomTop = Math.floor(Math.random() * maxTop);
-    punkt.style.left = randomLeft + 'px';
-    punkt.style.top = randomTop + 'px';
+// Funktion zur Aktualisierung der Raketenposition
+function aktualisierePosition() {
+    // Gravitation hinzufügen
+    geschwindigkeit.y += gravitation;
+
+    // Neue Position berechnen
+    raketePosition.x += geschwindigkeit.x;
+    raketePosition.y += geschwindigkeit.y;
+
+    // Begrenzungen des Spielfelds beachten
+    if (raketePosition.x < 0) raketePosition.x = 0;
+    if (raketePosition.x > spielfeld.offsetWidth) raketePosition.x = spielfeld.offsetWidth;
+    if (raketePosition.y < 0) raketePosition.y = 0;
+    if (raketePosition.y > spielfeld.offsetHeight) raketePosition.y = spielfeld.offsetHeight;
+
+    // Rakete auf der neuen Position setzen
+    rakete.style.left = raketePosition.x + 'px';
+    rakete.style.top = raketePosition.y + 'px';
 }
 
 // Event-Listener für Tastendrücke
-document.addEventListener('keydown', bewegeSpieler);
+document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+        case 'ArrowLeft':
+            dreheRakete('links');
+            break;
+        case 'ArrowRight':
+            dreheRakete('rechts');
+            break;
+        case 'ArrowUp':
+            gibSchub();
+            break;
+    }
+});
 
-// Initialer Punkt platzieren
-platzierenPunkt();
+// Aktualisiere die Position der Rakete in regelmäßigen Abständen
+setInterval(aktualisierePosition, 20);

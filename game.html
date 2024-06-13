@@ -3,38 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Einfaches Browser-Spiel</title>
+    <title>Raketen-Spiel</title>
     <style>
-        /* CSS für das Spielfeld und die Spielerfigur */
+        /* CSS für das Spielfeld und die Rakete */
         #spielfeld {
-            width: 500px;
-            height: 500px;
+            width: 800px;
+            height: 600px;
             border: 1px solid #000;
             position: relative;
-            background-color: #f0f0f0;
+            background-color: #000;
         }
 
-        .figur, .punkt {
-            width: 20px;
-            height: 20px;
+        .rakete {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid red;
             position: absolute;
-        }
-
-        .figur {
-            background-color: red;
-        }
-
-        .punkt {
-            background-color: green;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
         }
     </style>
 </head>
 <body>
-    <h1>Einfaches Browser-Spiel</h1>
+    <h1>Raketen-Spiel</h1>
     <div id="spielfeld">
-        <div class="figur" id="spieler" style="left: 0; top: 0;"></div>
-        <div class="punkt" id="punkt" style="left: 100px; top: 100px;"></div>
+        <div class="rakete" id="rakete"></div>
     </div>
-    <script src="spiel.js"></script>
+    <script src="raketenspiel.js"></script>
 </body>
 </html>
